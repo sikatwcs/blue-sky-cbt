@@ -1,9 +1,8 @@
-
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Sparkles, BookOpen, Award, BarChart3 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import Navbar from '@/components/Navbar';
+import Navbar from '@/components/navbar';
 import Footer from '@/components/Footer';
 
 const Index = () => {
