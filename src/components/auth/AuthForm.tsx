@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -32,23 +31,32 @@ const AuthForm = () => {
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("Form submitted, mode:", mode);
     setLoading(true);
     setError(null);
     
     try {
       if (mode === 'register') {
+        console.log("Attempting registration with:", { 
+          name: formData.name, 
+          email: formData.email 
+        });
+        
         if (formData.password !== formData.confirmPassword) {
           throw new Error("Passwords don't match");
         }
         
         await register(formData.name, formData.email, formData.password);
+        console.log("Registration successful");
         toast({
           title: "Registration successful",
           description: "Your account has been created successfully.",
         });
         navigate('/dashboard');
       } else {
+        console.log("Attempting login with:", { email: formData.email });
         await login(formData.email, formData.password);
+        console.log("Login successful");
         toast({
           title: "Login successful",
           description: "Welcome back!",
@@ -56,6 +64,7 @@ const AuthForm = () => {
         navigate('/dashboard');
       }
     } catch (err) {
+      console.error("Authentication error:", err);
       setError(err instanceof Error ? err.message : 'An error occurred');
       toast({
         variant: "destructive",
@@ -66,6 +75,7 @@ const AuthForm = () => {
       setLoading(false);
     }
   };
+  
   
   return (
     <div className="w-full max-w-md mx-auto">
