@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, LogOut, User } from 'lucide-react';
+import { Menu, X, LogOut, User, BookOpen, BarChart3 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/utils/auth';
 
@@ -37,7 +37,10 @@ const Navbar = () => {
   const navItems = [
     { name: 'Home', path: '/' },
     ...(user
-      ? [{ name: 'Dashboard', path: '/dashboard' }]
+      ? [
+          { name: 'Dashboard', path: '/dashboard', icon: <BarChart3 className="w-4 h-4 mr-1" /> },
+          { name: 'Exams', path: '/exams', icon: <BookOpen className="w-4 h-4 mr-1" /> }
+        ]
       : []),
     ...(role === 'admin'
       ? [{ name: 'Admin Panel', path: '/admin' }]
@@ -76,12 +79,13 @@ const Navbar = () => {
                 <Link
                   key={item.name}
                   to={item.path}
-                  className={`text-sm font-medium transition-colors duration-300 ${
+                  className={`text-sm font-medium transition-colors duration-300 flex items-center ${
                     location.pathname === item.path
                       ? 'text-blue-600'
                       : 'text-gray-600 hover:text-blue-600'
                   }`}
                 >
+                  {item.icon && item.icon}
                   {item.name}
                 </Link>
               ))}
@@ -144,13 +148,14 @@ const Navbar = () => {
               <Link
                 key={item.name}
                 to={item.path}
-                className={`px-3 py-2 rounded-md text-base font-medium ${
+                className={`px-3 py-2 rounded-md text-base font-medium flex items-center ${
                   location.pathname === item.path
                     ? 'bg-blue-50 text-blue-600'
                     : 'text-gray-600 hover:bg-blue-50 hover:text-blue-600'
                 }`}
                 onClick={closeMenu}
               >
+                {item.icon && item.icon}
                 {item.name}
               </Link>
             ))}

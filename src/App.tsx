@@ -10,6 +10,8 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
+import ExamList from "./pages/ExamList";
+import ExamPage from "./pages/ExamPage";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +30,22 @@ const App = () => (
               element={
                 <ProtectedRoute>
                   <Dashboard />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/exams" 
+              element={
+                <ProtectedRoute>
+                  <ExamList />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/exam/:examId" 
+              element={
+                <ProtectedRoute>
+                  <ExamPage />
                 </ProtectedRoute>
               } 
             />
