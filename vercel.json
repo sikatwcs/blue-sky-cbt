@@ -1,12 +1,27 @@
 {
   "version": 2,
-  "routes": [
-    { "handle": "filesystem" },
-    { "src": "/(.*)", "dest": "/index.html" }
-  ],
+  "framework": "vite",
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "framework": "vite",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "routes": [
+    {
+      "src": "/admin/(.*)",
+      "dest": "/index.html",
+      "status": 200
+    },
+    {
+      "src": "/questioner/(.*)",
+      "dest": "/index.html",
+      "status": 200
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html",
+      "status": 200
+    }
+  ],
   "env": {
     "VITE_SUPABASE_URL": "https://rkeufelbokirtpzcseuo.supabase.co",
     "VITE_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJrZXVmZWxib2tpcnRwemNzZXVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIxNzc4NjMsImV4cCI6MjA1Nzc1Mzg2M30.bSVBdKG2VJNZgTEcVCd8AywX56LEpLgeVQ7Fb6QBmqw"
