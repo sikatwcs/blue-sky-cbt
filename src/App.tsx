@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { AuthProvider } from "@/utils/auth";
 import { ProtectedRoute } from "@/utils/routes";
 import Index from "./pages/Index";
@@ -23,9 +23,10 @@ const queryClient = new QueryClient();
 const ProtectedAdminRoute = ({ children }: { children: React.ReactNode }) => {
   const role = localStorage.getItem('role');
   const token = localStorage.getItem('token');
+  const location = useLocation();
   
   if (role !== 'admin' || !token) {
-    return <Navigate to="/admin/login" replace />;
+    return <Navigate to="/admin/login" state={{ from: location }} replace />;
   }
   
   return <>{children}</>;
@@ -37,7 +38,7 @@ const App = () => (
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <BrowserRouter>
+        <BrowserRouter basename="/">
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
