@@ -25,8 +25,12 @@ const ProtectedAdminRoute = ({ children }: { children: React.ReactNode }) => {
   const token = localStorage.getItem('token');
   const location = useLocation();
   
-  if (role !== 'admin' || !token) {
+  if (!role || !token) {
     return <Navigate to="/admin/login" state={{ from: location }} replace />;
+  }
+
+  if (role !== 'admin') {
+    return <Navigate to="/" replace />;
   }
   
   return <>{children}</>;
@@ -38,7 +42,7 @@ const App = () => (
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <BrowserRouter basename="/">
+        <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
@@ -93,7 +97,7 @@ const App = () => (
             />
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route 
-              path="/admin" 
+              path="/admin/*" 
               element={
                 <ProtectedAdminRoute>
                   <AdminDashboard />
