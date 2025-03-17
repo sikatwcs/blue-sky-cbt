@@ -29,4 +29,7 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
     strictPort: true,
   },
+  optimizeDeps: {
+    include: ['react-router-dom']
+  }
 }));
