@@ -31,7 +31,9 @@ const AdminLogin = () => {
       
       // Redirect ke dashboard admin
       const from = location.state?.from?.pathname || "/admin";
-      navigate(from, { replace: true });
+      // Pastikan path tidak mengandung /login
+      const redirectPath = from.includes('/login') ? '/admin' : from;
+      navigate(redirectPath, { replace: true });
     } else {
       setError("Username atau password tidak valid");
     }

@@ -12,7 +12,7 @@ const ProtectedAdminRoute = ({ children }: ProtectedRouteProps) => {
   const token = localStorage.getItem("token");
 
   if (!role || !token) {
-    return <Navigate to="/admin/login" state={{ from: location }} replace />;
+    return <Navigate to="login" state={{ from: location }} replace />;
   }
 
   if (role !== "admin") {
@@ -25,9 +25,9 @@ const ProtectedAdminRoute = ({ children }: ProtectedRouteProps) => {
 const AdminRoutes = () => {
   return (
     <Routes>
-      <Route path="/login" element={<AdminLogin />} />
+      <Route path="login" element={<AdminLogin />} />
       <Route
-        path="/"
+        path=""
         element={
           <ProtectedAdminRoute>
             <AdminDashboard />
@@ -35,7 +35,7 @@ const AdminRoutes = () => {
         }
       />
       <Route
-        path="/*"
+        path="*"
         element={
           <ProtectedAdminRoute>
             <AdminDashboard />
