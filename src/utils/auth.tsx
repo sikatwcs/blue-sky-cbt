@@ -1,4 +1,3 @@
-
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { toast } from 'sonner';
 
@@ -26,27 +25,34 @@ const ADMIN_PASSWORD = 'kebumen00';
 const QUESTIONER_PASSWORD = 'kebumen00';
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    // Check if user is already logged in (from localStorage)
+  const [user, setUser] = useState<User>(() => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
       try {
-        setUser(JSON.parse(storedUser));
+        return JSON.parse(storedUser);
       } catch (error) {
         console.error('Failed to parse stored user:', error);
         localStorage.removeItem('user');
       }
     }
+    return null;
+  });
+  
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
     setLoading(false);
   }, []);
 
   const login = async (email: string, password: string) => {
-    // In a real app, this would make an API call to authenticate
-    // For demo purposes, we'll simulate a successful login
-    
+    if (!email || !password) {
+      throw new Error('Email dan password harus diisi');
+    }
+
+    if (password.length < 6) {
+      throw new Error('Password harus minimal 6 karakter');
+    }
+
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 1000));
     
@@ -60,6 +66,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       };
       setUser(adminUser);
       localStorage.setItem('user', JSON.stringify(adminUser));
+      toast.success('Berhasil login sebagai Admin');
       return;
     }
     
@@ -72,34 +79,37 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       };
       setUser(questionerUser);
       localStorage.setItem('user', JSON.stringify(questionerUser));
+      toast.success('Berhasil login sebagai Questioner');
       return;
     }
 
     // Regular user login
-    if (email && password) {
-      const newUser = {
-        id: `user-${Date.now()}`,
-        name: email.split('@')[0], // Use part of email as name
-        email,
-        role: 'user' as Role,
-      };
-      setUser(newUser);
-      localStorage.setItem('user', JSON.stringify(newUser));
-    } else {
-      throw new Error('Email and password are required');
-    }
+    const newUser = {
+      id: `user-${Date.now()}`,
+      name: email.split('@')[0], // Use part of email as name
+      email,
+      role: 'user' as Role,
+    };
+    setUser(newUser);
+    localStorage.setItem('user', JSON.stringify(newUser));
+    toast.success('Berhasil login');
   };
 
   const register = async (name: string, email: string, password: string) => {
-    // In a real app, this would make an API call to register
-    // For demo, simulate a successful registration
+    if (!name || !email || !password) {
+      throw new Error('Semua field harus diisi');
+    }
+
+    if (password.length < 6) {
+      throw new Error('Password harus minimal 6 karakter');
+    }
+
+    if (!email.includes('@')) {
+      throw new Error('Email tidak valid');
+    }
     
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    if (!name || !email || !password) {
-      throw new Error('All fields are required');
-    }
     
     const newUser = {
       id: `user-${Date.now()}`,
@@ -110,12 +120,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     
     setUser(newUser);
     localStorage.setItem('user', JSON.stringify(newUser));
+    toast.success('Registrasi berhasil');
   };
 
   const logout = () => {
     setUser(null);
     localStorage.removeItem('user');
-    toast.success('Logged out successfully');
+    toast.success('Berhasil logout');
   };
 
   const checkAdminAccess = (password: string) => {

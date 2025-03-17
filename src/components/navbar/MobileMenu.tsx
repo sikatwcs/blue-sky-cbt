@@ -1,51 +1,61 @@
-
 import { Menu, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import NavLinks from './NavLinks';
 import UserMenu from './UserMenu';
 
-type MobileMenuProps = {
+interface NavItem {
+  name: string;
+  path: string;
+  icon?: React.ReactNode;
+}
+
+interface MobileMenuProps {
   isOpen: boolean;
-  toggleMenu: () => void;
-  closeMenu: () => void;
-  navItems: Array<{
-    name: string;
-    path: string;
-    icon?: React.ReactNode;
-  }>;
-};
+  items: NavItem[];
+  onClose: () => void;
+}
 
-const MobileMenu = ({ isOpen, toggleMenu, closeMenu, navItems }: MobileMenuProps) => {
+const MobileMenu = ({ isOpen, items, onClose }: MobileMenuProps) => {
   return (
-    <>
-      {/* Mobile menu button */}
-      <button
-        className="md:hidden flex items-center"
-        onClick={toggleMenu}
-        aria-label="Toggle menu"
-      >
-        {isOpen ? (
-          <X className="w-6 h-6 text-blue-900" />
-        ) : (
-          <Menu className="w-6 h-6 text-blue-900" />
-        )}
-      </button>
+    <div 
+      className={`
+        fixed inset-0 z-50 lg:hidden
+        transform transition-transform duration-300 ease-in-out
+        ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+      `}
+    >
+      {/* Overlay */}
+      <div 
+        className="absolute inset-0 bg-black bg-opacity-50"
+        onClick={onClose}
+      />
 
-      {/* Mobile menu */}
-      <div
-        className={`md:hidden transition-all duration-300 ease-in-out overflow-hidden ${
-          isOpen 
-            ? 'max-h-screen opacity-100 py-4'
-            : 'max-h-0 opacity-0'
-        }`}
-      >
-        <NavLinks 
-          navItems={navItems} 
-          mobile={true} 
-          onClick={closeMenu} 
-        />
-        <UserMenu mobile={true} onClose={closeMenu} />
+      {/* Menu Content */}
+      <div className="relative w-[280px] h-full bg-white shadow-xl">
+        <div className="flex items-center justify-between p-4 border-b">
+          <div className="flex items-center space-x-2">
+            <span className="font-bold text-xl text-red-600">Jago</span>
+            <span className="font-bold text-xl">CPNS</span>
+          </div>
+          <button
+            onClick={onClose}
+            className="p-2 rounded-lg hover:bg-gray-100"
+          >
+            <X className="w-6 h-6 text-gray-600" />
+          </button>
+        </div>
+
+        <div className="p-4">
+          <NavLinks items={items} mobile onClick={onClose} />
+        </div>
+
+        <div className="absolute bottom-0 left-0 right-0 border-t">
+          <div className="p-4">
+            <UserMenu mobile />
+          </div>
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 

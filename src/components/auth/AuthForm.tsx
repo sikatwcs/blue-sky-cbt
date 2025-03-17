@@ -21,97 +21,105 @@ const AuthForm = () => {
   });
   
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+    
+    if (mode === 'register') {
+      if (!formData.name.trim()) {
+        newErrors.name = 'Nama harus diisi';
+      }
+      
+      if (formData.password !== formData.confirmPassword) {
+        newErrors.confirmPassword = 'Password tidak cocok';
+      }
+    }
+    
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email harus diisi';
+    } else if (!formData.email.includes('@')) {
+      newErrors.email = 'Email tidak valid';
+    }
+    
+    if (!formData.password) {
+      newErrors.password = 'Password harus diisi';
+    } else if (formData.password.length < 6) {
+      newErrors.password = 'Password minimal 6 karakter';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    setError(null);
+    // Clear error when user types
+    setErrors(prev => ({ ...prev, [name]: '' }));
   };
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted, mode:", mode);
+    
+    if (!validateForm()) {
+      return;
+    }
+    
     setLoading(true);
-    setError(null);
     
     try {
       if (mode === 'register') {
-        console.log("Attempting registration with:", { 
-          name: formData.name, 
-          email: formData.email 
-        });
-        
-        if (formData.password !== formData.confirmPassword) {
-          throw new Error("Passwords don't match");
-        }
-        
         await register(formData.name, formData.email, formData.password);
-        console.log("Registration successful");
-        toast({
-          title: "Registration successful",
-          description: "Your account has been created successfully.",
-        });
         navigate('/dashboard');
       } else {
-        console.log("Attempting login with:", { email: formData.email });
         await login(formData.email, formData.password);
-        console.log("Login successful");
-        toast({
-          title: "Login successful",
-          description: "Welcome back!",
-        });
         navigate('/dashboard');
       }
     } catch (err) {
-      console.error("Authentication error:", err);
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      const errorMessage = err instanceof Error ? err.message : 'Terjadi kesalahan';
       toast({
         variant: "destructive",
-        title: "Authentication error",
-        description: err instanceof Error ? err.message : 'An error occurred',
+        title: "Error",
+        description: errorMessage,
       });
     } finally {
       setLoading(false);
     }
   };
   
-  
   return (
     <div className="w-full max-w-md mx-auto">
       <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
         <div className="px-8 pt-8 pb-6 bg-gradient-to-br from-blue-500 to-blue-600 text-white">
           <h2 className="text-2xl font-bold text-center">
-            {mode === 'login' ? 'Welcome back' : 'Create an account'}
+            {mode === 'login' ? 'Selamat datang kembali' : 'Buat akun baru'}
           </h2>
           <p className="text-blue-100 text-center mt-2">
             {mode === 'login' 
-              ? 'Sign in to access your account' 
-              : 'Join us to take tests and track your progress'}
+              ? 'Masuk ke akun Anda' 
+              : 'Bergabung untuk mengikuti ujian'}
           </p>
         </div>
         
         <div className="p-8">
-          {error && (
-            <div className="mb-4 p-3 rounded bg-red-50 text-red-600 text-sm">
-              {error}
-            </div>
-          )}
-          
           <form onSubmit={handleSubmit} className="space-y-4">
             {mode === 'register' && (
               <div className="space-y-2">
-                <Label htmlFor="name">Full Name</Label>
+                <Label htmlFor="name">Nama Lengkap</Label>
                 <Input
                   id="name"
                   name="name"
                   type="text"
-                  placeholder="Enter your name"
+                  placeholder="Masukkan nama Anda"
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="input-field"
+                  className={`input-field ${errors.name ? 'border-red-500' : ''}`}
                 />
+                {errors.name && (
+                  <p className="text-sm text-red-500">{errors.name}</p>
+                )}
               </div>
             )}
             
@@ -121,12 +129,15 @@ const AuthForm = () => {
                 id="email"
                 name="email"
                 type="email"
-                placeholder="Enter your email"
+                placeholder="Masukkan email Anda"
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="input-field"
+                className={`input-field ${errors.email ? 'border-red-500' : ''}`}
               />
+              {errors.email && (
+                <p className="text-sm text-red-500">{errors.email}</p>
+              )}
             </div>
             
             <div className="space-y-2">
@@ -135,27 +146,33 @@ const AuthForm = () => {
                 id="password"
                 name="password"
                 type="password"
-                placeholder="Enter your password"
+                placeholder="Masukkan password"
                 value={formData.password}
                 onChange={handleChange}
                 required
-                className="input-field"
+                className={`input-field ${errors.password ? 'border-red-500' : ''}`}
               />
+              {errors.password && (
+                <p className="text-sm text-red-500">{errors.password}</p>
+              )}
             </div>
             
             {mode === 'register' && (
               <div className="space-y-2">
-                <Label htmlFor="confirmPassword">Confirm Password</Label>
+                <Label htmlFor="confirmPassword">Konfirmasi Password</Label>
                 <Input
                   id="confirmPassword"
                   name="confirmPassword"
                   type="password"
-                  placeholder="Confirm your password"
+                  placeholder="Konfirmasi password Anda"
                   value={formData.confirmPassword}
                   onChange={handleChange}
                   required
-                  className="input-field"
+                  className={`input-field ${errors.confirmPassword ? 'border-red-500' : ''}`}
                 />
+                {errors.confirmPassword && (
+                  <p className="text-sm text-red-500">{errors.confirmPassword}</p>
+                )}
               </div>
             )}
             
@@ -170,10 +187,10 @@ const AuthForm = () => {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
                   </svg>
-                  {mode === 'login' ? 'Signing in...' : 'Creating account...'}
+                  {mode === 'login' ? 'Sedang masuk...' : 'Membuat akun...'}
                 </span>
               ) : (
-                mode === 'login' ? 'Sign in' : 'Create account'
+                mode === 'login' ? 'Masuk' : 'Buat Akun'
               )}
             </Button>
           </form>
@@ -181,22 +198,22 @@ const AuthForm = () => {
           <div className="mt-6 text-center text-sm">
             {mode === 'login' ? (
               <p className="text-gray-600">
-                Don't have an account?{' '}
+                Belum punya akun?{' '}
                 <a
                   href="/auth?mode=register"
                   className="text-blue-600 hover:text-blue-800 font-medium"
                 >
-                  Sign up
+                  Daftar
                 </a>
               </p>
             ) : (
               <p className="text-gray-600">
-                Already have an account?{' '}
+                Sudah punya akun?{' '}
                 <a
                   href="/auth?mode=login"
                   className="text-blue-600 hover:text-blue-800 font-medium"
                 >
-                  Sign in
+                  Masuk
                 </a>
               </p>
             )}
@@ -204,13 +221,13 @@ const AuthForm = () => {
           
           <div className="mt-6 pt-6 border-t border-gray-200">
             <p className="text-xs text-center text-gray-500">
-              By continuing, you agree to our{' '}
+              Dengan melanjutkan, Anda menyetujui{' '}
               <a href="/terms" className="text-blue-600 hover:text-blue-800">
-                Terms of Service
+                Ketentuan Layanan
               </a>{' '}
-              and{' '}
+              dan{' '}
               <a href="/privacy-policy" className="text-blue-600 hover:text-blue-800">
-                Privacy Policy
+                Kebijakan Privasi
               </a>
               .
             </p>

@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -12,6 +11,9 @@ import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import ExamList from "./pages/ExamList";
 import ExamPage from "./pages/ExamPage";
+import QuestionerDashboard from "./pages/QuestionerDashboard";
+import FreeTryoutForm from "./pages/FreeTryoutForm";
+import QuestionerLogin from "./pages/QuestionerLogin";
 
 const queryClient = new QueryClient();
 
@@ -34,7 +36,7 @@ const App = () => (
               } 
             />
             <Route 
-              path="/exams" 
+              path="/pusat-langganan" 
               element={
                 <ProtectedRoute>
                   <ExamList />
@@ -46,6 +48,31 @@ const App = () => (
               element={
                 <ProtectedRoute>
                   <ExamPage />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/questioner" 
+              element={
+                <ProtectedRoute allowedRoles={['questioner']}>
+                  <QuestionerDashboard />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/free-tryout" 
+              element={
+                <ProtectedRoute>
+                  <FreeTryoutForm />
+                </ProtectedRoute>
+              } 
+            />
+            <Route path="/questioner/login" element={<QuestionerLogin />} />
+            <Route 
+              path="/questioner/dashboard" 
+              element={
+                <ProtectedRoute>
+                  <QuestionerDashboard />
                 </ProtectedRoute>
               } 
             />
