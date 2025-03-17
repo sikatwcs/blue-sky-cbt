@@ -1,13 +1,34 @@
 {
-  "version": 2,
-  "builds": [
+  "rewrites": [
     {
-      "src": "package.json",
-      "use": "@vercel/next"
+      "source": "/admin/:path*",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/questioner/:path*",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "framework": "vite",
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "s-maxage=1, stale-while-revalidate"
+        }
+      ]
     }
   ],
   "env": {
-    "NEXT_PUBLIC_SUPABASE_URL": "@next_public_supabase_url",
-    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "@next_public_supabase_anon_key"
+    "VITE_SUPABASE_URL": "https://rkeufelbokirtpzcseuo.supabase.co",
+    "VITE_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJrZXVmZWxib2tpcnRwemNzZXVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIxNzc4NjMsImV4cCI6MjA1Nzc1Mzg2M30.bSVBdKG2VJNZgTEcVCd8AywX56LEpLgeVQ7Fb6QBmqw"
   }
 } 

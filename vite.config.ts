@@ -5,9 +5,22 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
+  base: "/",
   server: {
     host: "::",
     port: 8080,
+  },
+  build: {
+    outDir: "dist",
+    assetsDir: "assets",
+    sourcemap: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+        },
+      },
+    },
   },
   plugins: [
     react(),
@@ -19,4 +32,11 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  preview: {
+    port: 8080,
+    strictPort: true,
+  },
+  optimizeDeps: {
+    include: ['react-router-dom']
+  }
 }));

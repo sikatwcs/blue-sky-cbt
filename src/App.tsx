@@ -14,6 +14,7 @@ import ExamPage from "./pages/ExamPage";
 import QuestionerDashboard from "./pages/QuestionerDashboard";
 import FreeTryoutForm from "./pages/FreeTryoutForm";
 import QuestionerLogin from "./pages/QuestionerLogin";
+import AdminRoutes from "./routes/AdminRoutes";
 
 const queryClient = new QueryClient();
 
@@ -76,7 +77,7 @@ const App = () => (
                 </ProtectedRoute>
               } 
             />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="/admin/*" element={<AdminRoutes />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
