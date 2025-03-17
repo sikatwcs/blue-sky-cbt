@@ -158,7 +158,7 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-
+        
         {/* Content */}
         <div className="p-4 sm:p-8">
           {/* Carousel Section */}
@@ -200,8 +200,8 @@ const Dashboard = () => {
                 Dapatkan informasi terbaru tentang event dan webinar
               </p>
             </button>
-          </div>
-
+        </div>
+        
           {/* Progress and Schedule Cards */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
             {/* Welcome Card */}
@@ -211,21 +211,21 @@ const Dashboard = () => {
               <button className="bg-white text-red-600 px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl font-medium hover:bg-red-50">
                 Mulai Belajar
               </button>
-            </div>
+              </div>
 
             {/* Progress Card */}
             <div className="bg-white rounded-2xl p-6 border border-gray-200">
               <h3 className="text-lg font-semibold mb-4">Progress Belajar</h3>
               <div className="space-y-4">
-                <div>
+                      <div>
                   <div className="flex justify-between text-sm mb-2">
                     <span className="text-gray-600">Tryout Selesai</span>
                     <span className="font-medium">8/12</span>
-                  </div>
+                      </div>
                   <div className="h-2 bg-gray-100 rounded-full">
                     <div className="h-2 bg-red-600 rounded-full" style={{ width: '66.67%' }}></div>
-                  </div>
-                </div>
+                      </div>
+                    </div>
                 <div>
                   <div className="flex justify-between text-sm mb-2">
                     <span className="text-gray-600">Rata-rata Nilai</span>
@@ -236,8 +236,8 @@ const Dashboard = () => {
                   </div>
                 </div>
               </div>
-            </div>
-
+        </div>
+        
             {/* Latest Tryout */}
             <div className="lg:col-span-2 bg-white rounded-2xl p-6 border border-gray-200">
               <div className="flex justify-between items-center mb-6">
@@ -256,7 +256,7 @@ const Dashboard = () => {
                     <span className="px-2.5 py-1 bg-green-50 text-green-700 text-xs font-medium rounded-full">
                       Baru
                     </span>
-                  </div>
+                      </div>
                 </a>
                 <a href="/exam/2" className="block p-4 border border-gray-200 rounded-xl hover:border-red-300 transition-colors">
                   <div className="flex justify-between items-start">
