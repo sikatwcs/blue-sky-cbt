@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,6 +8,7 @@ import { AlertCircle } from "lucide-react";
 
 const AdminLogin = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -29,7 +30,8 @@ const AdminLogin = () => {
       localStorage.setItem('loginTime', new Date().getTime().toString());
       
       // Redirect ke dashboard admin
-      navigate('/admin');
+      const from = location.state?.from?.pathname || "/admin";
+      navigate(from, { replace: true });
     } else {
       setError("Username atau password tidak valid");
     }
